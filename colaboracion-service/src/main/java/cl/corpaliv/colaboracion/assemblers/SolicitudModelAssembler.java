@@ -1,5 +1,6 @@
 package cl.corpaliv.colaboracion.assemblers;
 
+import cl.corpaliv.colaboracion.dto.DonanteResponseDTO;
 import cl.corpaliv.colaboracion.dto.HistorialSolicitudResponseDTO;
 import cl.corpaliv.colaboracion.dto.SolicitudResponseDTO;
 import cl.corpaliv.colaboracion.model.HistorialSolicitud;
@@ -14,5 +15,9 @@ public class SolicitudModelAssembler {
 
     public HistorialSolicitudResponseDTO toHistorialResponse(HistorialSolicitud evento) {
         return HistorialSolicitudResponseDTO.fromModel(evento);
+    }
+
+    public DonanteResponseDTO toDonanteResponse(Solicitud solicitud) {
+        return DonanteResponseDTO.fromModel(solicitud);
     }
 }
