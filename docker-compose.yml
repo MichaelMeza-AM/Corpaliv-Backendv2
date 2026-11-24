@@ -1,0 +1,68 @@
+# Credenciales de demostración local. Cambiarlas antes de publicar este backend.
+x-common-env: &common-env
+  CORPALIV_JWT_SECRET: esta_es_mi_compleja_clave_secreta_para_corpaliv
+  TZ: America/Santiago
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "9090:9090"
+    environment:
+      <<: *common-env
+    depends_on:
+      - producto-service
+      - colaboracion-service
+      - pedido-service
+      - auth-service
+    restart: unless-stopped
+
+  producto-service:
+    build: ./producto-service
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/corpaliv_productos?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    restart: unless-stopped
+
+  colaboracion-service:
+    build: ./colaboracion-service
+    ports:
+      - "127.0.0.1:8082:8082"
+    environment:
+      <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/corpaliv_colaboraciones?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    restart: unless-stopped
+
+  pedido-service:
+    build: ./pedido-service
+    ports:
+      - "127.0.0.1:8084:8084"
+    environment:
+      <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/corpaliv_pedidos?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+      CORPALIV_PRODUCTO_URL: http://producto-service:8081
+    depends_on:
+      producto-service:
+        condition: service_started
+    restart: unless-stopped
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "127.0.0.1:8083:8083"
+    environment:
+      <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/corpaliv_auth?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+      CORPALIV_ADMIN_EMAIL: gestor@corpaliv.cl
+      CORPALIV_ADMIN_PASSWORD: albalab2026
+    restart: unless-stopped
