@@ -30,7 +30,7 @@ public class SecurityConfig {
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(auth -> auth
-                .pathMatchers(HttpMethod.GET, "/api/productos", "/api/productos/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/productos", "/api/productos/**", "/api/donantes").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/auth/login", "/api/solicitudes", "/api/pedidos").permitAll()
                 .pathMatchers("/error").permitAll()
                 .anyExchange().authenticated())

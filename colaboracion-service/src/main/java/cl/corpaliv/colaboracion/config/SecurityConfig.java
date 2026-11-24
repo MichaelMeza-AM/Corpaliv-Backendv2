@@ -45,6 +45,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/doc/swagger-ui.html", "/doc/swagger-ui/**", "/v3/api-docs/**", "/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/solicitudes").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/donantes").permitAll()
                 .anyRequest().hasRole("GESTOR"))
             .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
             .build();
