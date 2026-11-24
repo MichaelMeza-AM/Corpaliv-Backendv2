@@ -4,8 +4,6 @@ import cl.corpaliv.pedido.assemblers.PedidoModelAssembler;
 import cl.corpaliv.pedido.dto.PedidoRequestDTO;
 import cl.corpaliv.pedido.exception.GlobalExceptionHandler;
 import cl.corpaliv.pedido.model.Pedido;
-import cl.corpaliv.pedido.repository.HistorialPedidoRepository;
-import cl.corpaliv.pedido.repository.PedidoRepository;
 import cl.corpaliv.pedido.service.PedidoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,15 +28,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class PedidoControllerTest {
-    @Mock private PedidoRepository pedidos;
-    @Mock private HistorialPedidoRepository historial;
-    @Mock private PedidoService service;
+    
+    @Mock
+    private PedidoService service;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void preparar() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new PedidoController(pedidos, historial, service,
-            new PedidoModelAssembler())).setControllerAdvice(new GlobalExceptionHandler()).build();
+        PedidoController controller = new PedidoController(service, new PedidoModelAssembler());
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     @Test
@@ -84,6 +85,6 @@ class PedidoControllerTest {
         mockMvc.perform(delete("/api/pedidos/12"))
             .andExpect(status().isMethodNotAllowed());
 
-        verifyNoInteractions(service, pedidos, historial);
+        verifyNoInteractions(service);
     }
 }
